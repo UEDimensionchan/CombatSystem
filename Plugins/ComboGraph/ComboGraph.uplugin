@@ -1,0 +1,24 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "ComboGraph",
+	"Description": "CombatSystem",
+	"Category": "Other",
+	"CreatedBy": "UEDimensionchan",
+	"CreatedByURL": "https://space.bilibili.com/3546796546590975?spm_id_from=333.788.0.0",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "ComboGraph",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}

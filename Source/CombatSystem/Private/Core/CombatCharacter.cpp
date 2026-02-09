@@ -12,7 +12,11 @@ ACombatCharacter::ACombatCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	AbilityComponent = CreateDefaultSubobject<UAbilityComponent>(TEXT("AbilitySystemComponent"));
-	AttributeSet = CreateDefaultSubobject<UAttributeSet_Base>(TEXT("AttributeSet"));
+	AbilityComponent->SetIsReplicated(true);
+	AbilityComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
+	AbilityComponent->SetMontageRepAnimPositionMethod(ERepAnimPositionMethod::CurrentSectionId);
+
+	AttributeSet = CreateDefaultSubobject<UAttributeSet_Base>(TEXT("AttributeSetBse"));
 }
 
 // Called when the game starts or when spawned

@@ -41,7 +41,7 @@ public:
 
 
 public:
-	UPROPERTY(EditAnywhere, Category = "Abilities")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> GrantAbilities;
 
 private:

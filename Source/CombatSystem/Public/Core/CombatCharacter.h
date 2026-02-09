@@ -44,7 +44,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> GrantAbilities;
 
-private:
+	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<UAbilityComponent> AbilityComponent;
 	TObjectPtr<UAttributeSet_Base> AttributeSet;
 };

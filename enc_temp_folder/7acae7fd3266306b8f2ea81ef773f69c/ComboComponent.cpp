@@ -99,7 +99,7 @@ void FCombostruct::UpdateTheCurrentIndex()
 {
 	if (bCanUpdate)
 	{
-		if (++CurrentIndex > MaxIndex)
+		if (CurrentIndex++ > MaxIndex)
 		{
 			CurrentIndex = 0;
 		}

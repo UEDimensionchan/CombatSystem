@@ -25,7 +25,6 @@ public:
 	void SetIsPressed(bool InIsPressed) { bIsPressed = InIsPressed; }
 	void ResetAllData();
 
-	UPROPERTY()
 	FTimerHandle ResetTime;
 
 private:

@@ -14,4 +14,6 @@ class COMBOGRAPH_API UAnimNotify_ComboEnd : public UAnimNotify
 {
 	GENERATED_BODY()
 	
+protected:
+	virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference) override;
 };

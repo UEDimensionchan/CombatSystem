@@ -60,8 +60,8 @@ void UComboComponent::Press_OnLocal(FGameplayTag InGameplayTag, FGameplayAbility
 	{
 		FGameplayEventData InData;
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwner(), InGameplayTag, InData);
-		Press_OnServer();
 	}
+	Press_OnServer();
 }
 
 void UComboComponent::ResetCombo()

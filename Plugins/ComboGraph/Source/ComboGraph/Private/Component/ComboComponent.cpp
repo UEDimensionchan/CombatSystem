@@ -3,11 +3,14 @@
 
 #include "Component/ComboComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "GameplayAbilitySpecHandle.h"
+#include "AbilitySystemComponent.h"
 #include "GameplayTagContainer.h"
 #include "Net/UnrealNetwork.h"
 
 // Sets default values for this component's properties
 UComboComponent::UComboComponent()
+	: ResetTime(0.5f)
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -44,9 +47,16 @@ void UComboComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 }
 
 
-void UComboComponent::Press_OnLocal(FGameplayTag InGameplayTag)
+void UComboComponent::Press_OnLocal(FGameplayTag InGameplayTag, FGameplayAbilitySpecHandle InActiveHandle)
 {
-	if (GetOwner())
+	if (GetOwner() && InActiveHandle.IsValid())
+	{
+		if (UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetOwner()))
+		{
+			ASC->TryActivateAbility(InActiveHandle);
+		}
+	}
+	else if (GetOwner() && InGameplayTag.IsValid())
 	{
 		FGameplayEventData InData;
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwner(), InGameplayTag, InData);
@@ -66,7 +76,7 @@ void UComboComponent::Press_OnServer_Implementation()
 	Combo.SetIsPressed(true);
 	if (GetWorld())
 	{
-		GetWorld()->GetTimerManager().ClearTimer(Combo.ResetTime);
+		GetWorld()->GetTimerManager().ClearTimer(Combo.ResetTimer);
 	}
 }
 
@@ -76,10 +86,10 @@ void UComboComponent::Release_OnServer_Implementation()
 	if (GetWorld())
 	{
 		GetWorld()->GetTimerManager().SetTimer(
-			Combo.ResetTime,
+			Combo.ResetTimer,
 			this,
 			&UComboComponent::ResetCombo,
-			0.5f,
+			ResetTime,
 			false
 		);
 	}
@@ -99,7 +109,7 @@ void FCombostruct::UpdateTheCurrentIndex()
 {
 	if (bCanUpdate)
 	{
-		if (++CurrentIndex > MaxIndex)
+		if (++CurrentIndex > MaxIndex - 1)
 		{
 			CurrentIndex = 0;
 		}

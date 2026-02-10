@@ -7,6 +7,7 @@
 #include "ComboComponent.generated.h"
 
 struct FGameplayTag;
+struct FGameplayAbilitySpecHandle;
 
 
 USTRUCT(BlueprintType)
@@ -26,7 +27,7 @@ public:
 	void ResetAllData();
 
 	UPROPERTY()
-	FTimerHandle ResetTime;
+	FTimerHandle ResetTimer;
 
 private:
 	UPROPERTY()
@@ -52,7 +53,6 @@ public:
 	UComboComponent();
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-	UFUNCTION(BlueprintCallable)
 	FCombostruct& GetCombo() { return Combo; }
 
 	UFUNCTION(BlueprintCallable,BlueprintPure)
@@ -70,7 +70,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Press"),Category = "Combo")
-	void Press_OnLocal(FGameplayTag InGameplayTag);
+	void Press_OnLocal(FGameplayTag InGameplayTag, FGameplayAbilitySpecHandle InActiveHandle);
 
 	UFUNCTION(Server,Reliable)
 	void Press_OnServer();
@@ -85,4 +85,7 @@ public:
 protected:
 	UPROPERTY(Replicated)
 	FCombostruct Combo;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	float ResetTime;
 };

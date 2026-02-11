@@ -5,6 +5,11 @@
 #include "GameFramework/Actor.h"
 #include "Component/ComboComponent.h"
 
+UAnimNotifyState_Combo::UAnimNotifyState_Combo()
+{
+	
+}
+
 void UAnimNotifyState_Combo::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime, const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyTick(MeshComp, Animation, FrameDeltaTime, EventReference);

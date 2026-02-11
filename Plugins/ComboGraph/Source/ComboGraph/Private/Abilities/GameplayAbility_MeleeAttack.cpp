@@ -24,14 +24,13 @@ void UGameplayAbility_MeleeAttack::ActivateAbility(const FGameplayAbilitySpecHan
 	{
 		if (UComboComponent* ComboCom = GetAvatarActorFromActorInfo()->GetComponentByClass<UComboComponent>())
 		{
-			ComboCom->GetCombo().SetMaxIndex(ComboMontage->GetNumSections());
-
+			GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Blue, FName(ComboCom->GetCombo().GetCurrentSection()).ToString());
 			UAbilityTask_PlayMontageAndWait* MontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
 				this,
 				NAME_None,
 				ComboMontage,
 				1.f,
-				FName(*FString::FromInt(ComboCom->GetComboCurrentIndex())),
+				ComboCom->GetCombo().GetCurrentSection(),
 				true,
 				1.f,
 				0.f,

@@ -7,6 +7,13 @@
 #include "Component/ComboComponent.h"
 
 
+UAnimNotify_ComboEnd::UAnimNotify_ComboEnd()
+{
+	NextSectionName = FName(TEXT("None"));
+	ResetTime = 0.2;
+}
+
+
 void UAnimNotify_ComboEnd::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference)
 {
 	Super::Notify(MeshComp, Animation, EventReference);
@@ -17,7 +24,10 @@ void UAnimNotify_ComboEnd::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenc
 		{
 			if (UComboComponent* ComboComponent = Cast<UComboComponent>(InActor->GetComponentByClass(UComboComponent::StaticClass())))
 			{
-				ComboComponent->GetCombo().UpdateTheCurrentIndex();
+				ComboComponent->GetCombo().SetCurrentSection(NextSectionName);
+				ComboComponent->GetCombo().SetResetTime(ResetTime);
+
+				ComboComponent->GetCombo().UpdateTheCurrentSection();
 			}
 			InCharacter->StopAnimMontage();
 		}

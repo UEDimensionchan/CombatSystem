@@ -13,7 +13,10 @@ UCLASS()
 class COMBOGRAPH_API UAnimNotifyState_Combo : public UAnimNotifyState
 {
 	GENERATED_BODY()
+
+	UAnimNotifyState_Combo();
 	
 public:
 	virtual void NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime, const FAnimNotifyEventReference& EventReference) override;
+
 };

@@ -18,22 +18,29 @@ struct FCombostruct
 	FCombostruct();
 
 public:
-	int32 GetCurrentIndex() { return CurrentIndex; }
-	void SetMaxIndex(int32 InMaxIndex) { MaxIndex = InMaxIndex; }
-	void UpdateTheCurrentIndex();
-	void SetCanUpdate(bool bCanUpdateTheIndex) { bCanUpdate = bCanUpdateTheIndex; }
+	void UpdateTheCurrentSection();
+	void SetCanUpdate(bool bCanUpdateTheSection) { bCanUpdate = bCanUpdateTheSection; }
 	bool GetIsPressed() { return bIsPressed; }
 	void SetIsPressed(bool InIsPressed) { bIsPressed = InIsPressed; }
+
 	void ResetAllData();
+
+	void SetCurrentSection(FName InSection) { CurrentSection = InSection; }
+	FName GetCurrentSection() const { return CurrentSection; }
+
+	void SetResetTime(float InTime) { ResetTime = InTime; }
+	float GetResetTime() { return ResetTime; }
 
 	UPROPERTY()
 	FTimerHandle ResetTimer;
 
 private:
 	UPROPERTY()
-	int32 CurrentIndex;
+	FName CurrentSection;
+
 	UPROPERTY()
-	int32 MaxIndex;
+	float ResetTime;
+
 	UPROPERTY()
 	bool bIsPressed;
 	UPROPERTY()
@@ -54,12 +61,6 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	FCombostruct& GetCombo() { return Combo; }
-
-	UFUNCTION(BlueprintCallable,BlueprintPure)
-	int32 GetComboCurrentIndex() { return Combo.GetCurrentIndex(); }
-
-	UFUNCTION(BlueprintCallable)
-	void SetComboMaxIndex(int32 InMaxIndex) { GetCombo().SetMaxIndex(InMaxIndex); }
 
 protected:
 	// Called when the game starts

@@ -89,7 +89,7 @@ void UComboComponent::Release_OnServer_Implementation()
 			Combo.ResetTimer,
 			this,
 			&UComboComponent::ResetCombo,
-			ResetTime,
+			UComboComponent::GetCombo().GetResetTime(),
 			false
 		);
 	}
@@ -100,33 +100,25 @@ void UComboComponent::Release_OnServer_Implementation()
 //************FCombostruct************//
 FCombostruct::FCombostruct()
 {
-	CurrentIndex = 0;
-	MaxIndex = 0;
 	bIsPressed = false;
 	bCanUpdate = false;
 }
-void FCombostruct::UpdateTheCurrentIndex()
+void FCombostruct::UpdateTheCurrentSection()
 {
 	if (bCanUpdate)
 	{
-		if (++CurrentIndex > MaxIndex - 1)
-		{
-			CurrentIndex = 0;
-		}
-		else
-		{
-			bCanUpdate = false;
-		}
+		bCanUpdate = false;
 	}
 	else
 	{
-		CurrentIndex = 0;
+		CurrentSection = FName(TEXT("None"));
 	}
 }
 void FCombostruct::ResetAllData()
 {
 	bCanUpdate = false;
 	bIsPressed = false;
-	CurrentIndex = 0;
+	ResetTime = 0.2;
+	CurrentSection = FName(TEXT("None"));
 }
 //************FCombostruct************//

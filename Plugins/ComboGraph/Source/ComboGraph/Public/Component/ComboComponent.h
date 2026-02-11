@@ -31,9 +31,6 @@ public:
 	void SetResetTime(float InTime) { ResetTime = InTime; }
 	float GetResetTime() { return ResetTime; }
 
-	UPROPERTY()
-	FTimerHandle ResetTimer;
-
 private:
 	UPROPERTY()
 	FName CurrentSection;
@@ -62,6 +59,11 @@ public:
 
 	FCombostruct& GetCombo() { return Combo; }
 
+	UFUNCTION(BlueprintCallable)
+	float GetRegisterPressTime() { return RegisterPressTime; }
+	UFUNCTION(BlueprintCallable)
+	void SetRegisterPressTime(float InPressTime) { RegisterPressTime = InPressTime; }
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -82,11 +84,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ResetCombo();
 
+	void ApplyComboTags(FGameplayTag AddTag, FGameplayTag RemoveTag);
+
 
 protected:
 	UPROPERTY(Replicated)
 	FCombostruct Combo;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	float ResetTime;
+	float RegisterPressTime;
+
+	FTimerHandle ResetTimer;
 };

@@ -21,12 +21,15 @@ protected:
 	virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference) override;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ComboEnd")
 	FName NextSectionName;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ComboEnd")
 	float ResetTime;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FGameplayTag NeedActiveTags;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ComboEnd|Tag")
+	FGameplayTag ActiveTags;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ComboEnd|Tag")
+	FGameplayTag DisActiveTags;
 };

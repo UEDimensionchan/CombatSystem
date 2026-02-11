@@ -42,8 +42,8 @@ void UGameplayAbility_MeleeAttack::ActivateAbility(const FGameplayAbilitySpecHan
 				return;
 			}
 			MontageTask->OnCompleted.AddDynamic(this, &UGameplayAbility_MeleeAttack::MontageEnd);
-			MontageTask->OnBlendOut.AddDynamic(this, &UGameplayAbility_MeleeAttack::MontageEnd);
 			MontageTask->OnInterrupted.AddDynamic(this, &UGameplayAbility_MeleeAttack::MontageEnd);
+			//MontageTask->OnBlendOut.AddDynamic(this, &UGameplayAbility_MeleeAttack::MontageEnd);
 			MontageTask->OnCancelled.AddDynamic(this, &UGameplayAbility_MeleeAttack::MontageEnd);
 
 			MontageTask->ReadyForActivation();

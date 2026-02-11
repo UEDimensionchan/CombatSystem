@@ -10,7 +10,7 @@
 
 // Sets default values for this component's properties
 UComboComponent::UComboComponent()
-	: ResetTime(0.5f)
+	: RegisterPressTime(0.f)
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -69,6 +69,15 @@ void UComboComponent::ResetCombo()
 	Combo.ResetAllData();
 }
 
+void UComboComponent::ApplyComboTags(FGameplayTag AddTag, FGameplayTag RemoveTag)
+{
+	if (UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetOwner()))
+	{
+		if (AddTag.IsValid())    ASC->AddLooseGameplayTag(AddTag);
+		if (RemoveTag.IsValid()) ASC->RemoveLooseGameplayTag(RemoveTag);
+	}
+}
+
 
 void UComboComponent::Press_OnServer_Implementation()
 {
@@ -76,7 +85,7 @@ void UComboComponent::Press_OnServer_Implementation()
 	Combo.SetIsPressed(true);
 	if (GetWorld())
 	{
-		GetWorld()->GetTimerManager().ClearTimer(Combo.ResetTimer);
+		GetWorld()->GetTimerManager().ClearTimer(ResetTimer);
 	}
 }
 
@@ -86,10 +95,10 @@ void UComboComponent::Release_OnServer_Implementation()
 	if (GetWorld())
 	{
 		GetWorld()->GetTimerManager().SetTimer(
-			Combo.ResetTimer,
+			ResetTimer,
 			this,
 			&UComboComponent::ResetCombo,
-			UComboComponent::GetCombo().GetResetTime(),
+			GetCombo().GetResetTime(),
 			false
 		);
 	}
@@ -102,6 +111,8 @@ FCombostruct::FCombostruct()
 {
 	bIsPressed = false;
 	bCanUpdate = false;
+	ResetTime = 0.2;
+	CurrentSection = FName(TEXT("None"));
 }
 void FCombostruct::UpdateTheCurrentSection()
 {

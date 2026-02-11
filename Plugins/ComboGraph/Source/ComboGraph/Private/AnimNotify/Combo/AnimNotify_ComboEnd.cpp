@@ -5,7 +5,9 @@
 #include "GameFramework/Actor.h"
 #include "GameFramework/Character.h"
 #include "Component/ComboComponent.h"
-
+#include "GameplayTagContainer.h"
+#include "AbilitySystemInterface.h"
+#include "GameplayPrediction.h"
 
 UAnimNotify_ComboEnd::UAnimNotify_ComboEnd()
 {
@@ -18,18 +20,29 @@ void UAnimNotify_ComboEnd::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenc
 {
 	Super::Notify(MeshComp, Animation, EventReference);
 
-	if (AActor* InActor = MeshComp->GetOwner())
-	{
-		if (ACharacter* InCharacter = Cast<ACharacter>(InActor))
-		{
-			if (UComboComponent* ComboComponent = Cast<UComboComponent>(InActor->GetComponentByClass(UComboComponent::StaticClass())))
-			{
-				ComboComponent->GetCombo().SetCurrentSection(NextSectionName);
-				ComboComponent->GetCombo().SetResetTime(ResetTime);
 
-				ComboComponent->GetCombo().UpdateTheCurrentSection();
+	if (IAbilitySystemInterface* InAbilitySystemInterface = Cast<IAbilitySystemInterface>(MeshComp->GetOwner()))
+	{
+		FScopedPredictionWindow NewScopedWindow(InAbilitySystemInterface->GetAbilitySystemComponent(), true);
+
+		if (AActor* InActor = MeshComp->GetOwner())
+		{
+			if (ACharacter* InCharacter = Cast<ACharacter>(InActor))
+			{
+				if (UComboComponent* ComboComponent = InActor->GetComponentByClass<UComboComponent>())
+				{
+					ComboComponent->GetCombo().SetCurrentSection(NextSectionName);
+					ComboComponent->GetCombo().SetResetTime(ResetTime);
+
+					ComboComponent->GetCombo().UpdateTheCurrentSection();
+
+					ComboComponent->Release_OnServer();
+
+					ComboComponent->ApplyComboTags(ActiveTags, DisActiveTags);
+				}
+				InCharacter->StopAnimMontage();
+
 			}
-			InCharacter->StopAnimMontage();
 		}
 	}
 }

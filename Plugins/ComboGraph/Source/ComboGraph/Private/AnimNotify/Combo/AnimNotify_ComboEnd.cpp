@@ -36,7 +36,7 @@ void UAnimNotify_ComboEnd::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenc
 
 					ComboComponent->GetCombo().UpdateTheCurrentSection();
 
-					ComboComponent->Release_OnServer();
+					ComboComponent->EndReset();
 
 					ComboComponent->ApplyComboTags(ActiveTags, DisActiveTags);
 				}

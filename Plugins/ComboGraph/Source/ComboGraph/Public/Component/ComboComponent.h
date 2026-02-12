@@ -19,7 +19,10 @@ struct FCombostruct
 
 public:
 	void UpdateTheCurrentSection();
+
+	bool GetCanUpdate() { return bCanUpdate; }
 	void SetCanUpdate(bool bCanUpdateTheSection) { bCanUpdate = bCanUpdateTheSection; }
+
 	bool GetIsPressed() { return bIsPressed; }
 	void SetIsPressed(bool InIsPressed) { bIsPressed = InIsPressed; }
 
@@ -73,7 +76,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Press"),Category = "Combo")
-	void Press_OnLocal(FGameplayTag InGameplayTag, FGameplayAbilitySpecHandle InActiveHandle);
+	void Press_OnLocal(TArray<FGameplayTag> InGameplayTag, FGameplayAbilitySpecHandle InActiveHandle);
 
 	UFUNCTION(Server,Reliable)
 	void Press_OnServer();
@@ -81,7 +84,9 @@ public:
 	UFUNCTION(Server, Reliable, BlueprintCallable, meta = (DisplayName = "Release"), Category = "Combo")
 	void Release_OnServer();
 
-	UFUNCTION(BlueprintCallable)
+	void EndReset();
+
+	UFUNCTION(BlueprintCallable, Server, Reliable)
 	void ResetCombo();
 
 	void ApplyComboTags(FGameplayTag AddTag, FGameplayTag RemoveTag);
@@ -93,6 +98,10 @@ protected:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	float RegisterPressTime;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float PressintervalTime = 0.5f;
+	float Lv_PressintervalTime = 0.f;
 
 	FTimerHandle ResetTimer;
 };

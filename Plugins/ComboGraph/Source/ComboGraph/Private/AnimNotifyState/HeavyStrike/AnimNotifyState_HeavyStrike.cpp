@@ -22,7 +22,9 @@ void UAnimNotifyState_HeavyStrike::NotifyTick(USkeletalMeshComponent* MeshComp, 
 		{
 			if (CC->GetRegisterPressTime() > HeavyStrikePressTime && CC->GetCombo().GetIsPressed())
 			{
-				CC->Press_OnLocal(HeavyStrikeTag, FGameplayAbilitySpecHandle());
+				TArray<FGameplayTag> TagArray;
+				TagArray.Add(HeavyStrikeTag);
+				CC->Press_OnLocal(TagArray, FGameplayAbilitySpecHandle());
 			}
 		}
 	}

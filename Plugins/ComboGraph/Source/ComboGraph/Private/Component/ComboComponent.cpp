@@ -43,30 +43,48 @@ void UComboComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	if (Lv_PressintervalTime > 0)
+	{
+		Lv_PressintervalTime -= DeltaTime;
+	}
+
 	// ...
 }
 
 
-void UComboComponent::Press_OnLocal(FGameplayTag InGameplayTag, FGameplayAbilitySpecHandle InActiveHandle)
+void UComboComponent::Press_OnLocal(TArray<FGameplayTag> InGameplayTag, FGameplayAbilitySpecHandle InActiveHandle)
 {
-	if (GetOwner() && InActiveHandle.IsValid())
+	if (Lv_PressintervalTime <= 0.f)
 	{
-		if (UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetOwner()))
-		{
-			ASC->TryActivateAbility(InActiveHandle);
-		}
-	}
-	else if (GetOwner() && InGameplayTag.IsValid())
-	{
-		FGameplayEventData InData;
-		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwner(), InGameplayTag, InData);
-	}
-	Press_OnServer();
-}
+		Lv_PressintervalTime = PressintervalTime;
 
-void UComboComponent::ResetCombo()
-{
-	Combo.ResetAllData();
+
+		if (GetOwner() && InActiveHandle.IsValid())
+		{
+			if (UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetOwner()))
+			{
+				ASC->TryActivateAbility(InActiveHandle);
+			}
+		}
+		else if (GetOwner() && !InGameplayTag.IsEmpty())
+		{
+			for (FGameplayTag TG : InGameplayTag)
+			{
+				if (TG.IsValid())
+				{
+					FGameplayEventData InData;
+					UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwner(), TG, InData);
+				}
+			}
+		}
+
+		if (GetWorld())
+		{
+			GetWorld()->GetTimerManager().ClearTimer(ResetTimer);
+		}
+
+		Press_OnServer();
+	}
 }
 
 void UComboComponent::ApplyComboTags(FGameplayTag AddTag, FGameplayTag RemoveTag)
@@ -81,17 +99,16 @@ void UComboComponent::ApplyComboTags(FGameplayTag AddTag, FGameplayTag RemoveTag
 
 void UComboComponent::Press_OnServer_Implementation()
 {
-	Combo.SetCanUpdate(true);
 	Combo.SetIsPressed(true);
-	if (GetWorld())
-	{
-		GetWorld()->GetTimerManager().ClearTimer(ResetTimer);
-	}
 }
 
 void UComboComponent::Release_OnServer_Implementation()
 {
 	Combo.SetIsPressed(false);
+}
+
+void UComboComponent::EndReset()
+{
 	if (GetWorld())
 	{
 		GetWorld()->GetTimerManager().SetTimer(
@@ -102,6 +119,11 @@ void UComboComponent::Release_OnServer_Implementation()
 			false
 		);
 	}
+}
+
+void UComboComponent::ResetCombo_Implementation()
+{
+	Combo.ResetAllData();
 }
 
 
